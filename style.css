@@ -1,9 +1,13 @@
 body {
     margin: 0;
     overflow: hidden;
-    background-color: #222;
+    background-image: url("img/background-image.png"); /* Replace with your image file */
+    background-size: cover;  /* Ensures it covers the whole screen */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents tiling */
 }
 
 canvas {
-    display: block;
+    /*display: block;*/
+    image-rendering: pixelated; /* Ensures crisp pixel art */
 }
