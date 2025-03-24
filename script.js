@@ -15,34 +15,55 @@ characterImage.src = "img/character.png";
 
 // Define interactive areas and their actions
 const interactiveAreas = [
+    // hover message is disabled
     {
-        name: "computer",
-        x: 800, // Example coordinates - adjust based on actual room image
-        y: 340,
-        width: 130,
-        height: 80,
-        hoverMessage: "My computer setup...",
-        message: "This is my workstation where I code and design!",
-        link: "https://github.com/yourusername" // Replace with your GitHub or portfolio link
+        name: "Macbook",
+        x: 1010, // Example coordinates - adjust based on actual room image
+        y: 400,
+        width: 30,
+        height: 30,
+        hoverMessage: "My laptop setup...",
+        message: "This is my lapytopy where I code and study!",
+        link: "https://github.com/HermioneHacks" // Replace with your GitHub or portfolio link
     },
     {
         name: "bed",
         x: 500, // Example coordinates - adjust based on actual room image
         y: 400,
-        width: 200,
+        width: 100,
         height: 100,
         hoverMessage: "My cozy bed...",
-        message: "I balance work and rest for optimal productivity!"
+        message: "My cozy bed...!"
     },
     {
         name: "bookshelf",
-        x: 200, // Example coordinates - adjust based on actual room image
-        y: 250,
-        width: 70,
-        height: 150,
-        hoverMessage: "My collection of books...",
-        message: "I love reading about programming and design!",
-        link: "https://yourfavoritebooks.com" // Optional link
+        x: 800, // Example coordinates - adjust based on actual room image
+        y: 200,
+        width: 150,
+        height: 70,
+        hoverMessage: "My collection of candy and perfume...",
+        message: "This is my bookshelf, where I keep my trinkets!",
+        //link: "https://yourfavoritebooks.com" // Optional link
+    },
+    {
+        name: "iPad",
+        x: 970, // Example coordinates - adjust based on actual room image
+        y: 400,
+        width: 20,
+        height: 20,
+        //hoverMessage: "My iPad...",
+        message: "This is my iPad where I watch my favorite shows and take notes!",
+        //link: "https://github.com/HermioneHacks" // Replace with new page link
+    },
+    {
+        name: "turtle",
+        x: 670, // Example coordinates - adjust based on actual room image
+        y: 410,
+        width: 30,
+        height: 30,
+        hoverMessage: "My dear turtle...",
+        message: "This is Sir Bartholomew Oswald van Beethoven the Third!",
+        link: "https://www.ikea.com/us/en/p/blavingad-soft-toy-turtle-green-10532041/" // Ikea link!
     },
     // Add more interactive areas as needed
 ];
