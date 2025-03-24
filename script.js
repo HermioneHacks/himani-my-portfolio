@@ -152,7 +152,7 @@ function drawScene() {
             ctx.fillStyle = "white";
             ctx.fillRect(areaX, areaY - 20, area.name.length * 8, 20);
             ctx.fillStyle = "black";
-            ctx.font = "12px Arial";
+            ctx.font = "12px 'Press Start 2P'";
             ctx.fillText(area.name, areaX + 5, areaY - 5);
         }
     }
@@ -182,12 +182,16 @@ function drawScene() {
     ctx.fillStyle = "white";
     ctx.fillRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
     ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
     ctx.strokeRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
     ctx.fillStyle = "black";
-    ctx.font = `${Math.max(12, Math.min(16, canvas.width / 70))}px Arial`; // Responsive font size
+    
+    // Use the pixelated game font
+    const fontSize = Math.max(10, Math.min(14, canvas.width / 80));
+    ctx.font = `${fontSize}px 'Press Start 2P'`;
     
     // Handle long text by adding line breaks
-    wrapText(ctx, currentMessage, bubbleX + 10, bubbleY + 25, bubbleWidth - 20, 20);
+    wrapText(ctx, currentMessage, bubbleX + 15, bubbleY + 30, bubbleWidth - 30, 18);
     
     // Draw Next button if needed
     if (showNextButton) {
@@ -197,18 +201,18 @@ function drawScene() {
         const buttonX = bubbleX + (bubbleWidth - buttonWidth) / 2;
         const buttonY = bubbleY + bubbleHeight + (canvas.height * UI.nextButton.relMarginTop);
         
-        // Draw button
+        // Draw button with pixel style
         ctx.fillStyle = "#4CAF50"; // Green button
         ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-        
-        // Draw button border
         ctx.strokeStyle = "#248536";
+        ctx.lineWidth = 3;
         ctx.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
         
-        // Button text
+        // Button text with pixel font
         ctx.fillStyle = "white";
-        ctx.font = `${Math.max(12, Math.min(14, canvas.width / 80))}px Arial`; // Responsive font size
-        ctx.fillText("Next", buttonX + buttonWidth/2 - 15, buttonY + buttonHeight/2 + 5);
+        ctx.font = `${Math.max(10, Math.min(12, canvas.width / 90))}px 'Press Start 2P'`;
+        const textWidth = ctx.measureText("NEXT").width;
+        ctx.fillText("NEXT", buttonX + (buttonWidth - textWidth)/2, buttonY + buttonHeight/2 + 5);
     }
     
     // Add debug mode instructions
@@ -216,8 +220,8 @@ function drawScene() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
         ctx.fillRect(canvas.width - 220, 10, 210, 30);
         ctx.fillStyle = "white";
-        ctx.font = "14px Arial";
-        ctx.fillText("Press 'D' to toggle debug mode", canvas.width - 210, 30);
+        ctx.font = "14px 'Press Start 2P'";
+        ctx.fillText("Press D to toggle debug", canvas.width - 210, 30);
     }
 }
 
