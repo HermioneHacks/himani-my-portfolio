@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mango's Photo Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #f5f5f5;
+            background-image: url("img/mangopagebg.jpg");
+            background-size: contain;
+            background-position: center top;
+            background-repeat: repeat;
+            image-rendering: pixelated;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        h1 {
+            color: #ff9900;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            font-size: 24px;
+            letter-spacing: 1px;
+            image-rendering: pixelated;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 4px solid #444;
+            image-rendering: pixelated;
+        }
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-color: #ff9900;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .gallery-caption {
+            padding: 15px;
+            color: #333;
+            background-color: white;
+            font-size: 12px;
+            border-top: 4px solid #444;
+            image-rendering: pixelated;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 20px;
+            background-color: #ff9900;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 4px solid #e68a00;
+            image-rendering: pixelated;
+            font-size: 14px;
+        }
+        .back-button:hover {
+            background-color: #e68a00;
+            transform: translateY(-2px);
+            border-color: #ff9900;
+        }
+        .content-wrapper {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 6px solid #444;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>MANGO'S PHOTO GALLERY</h1>
+    
+    <div class="content-wrapper">
+        <div class="gallery">
+            <!-- Add your bird photos here -->
+            <div class="gallery-item">
+                <img src="img/mango1.jpg" alt="Mango the bird">
+                <div class="gallery-caption">Mango enjoying the playground I built for him!</div>
+            </div>
+            <div class="gallery-item">
+                <img src="img/mango2.jpg" alt="Mango the bird">
+                <div class="gallery-caption">Mango's favorite perch, the chiristmas tree!</div>
+            </div>
+            <div class="gallery-item">
+                <img src="img/mango3.jpg" alt="Mango the bird">
+                <div class="gallery-caption">Mango being playful upside down!</div>
+            </div>
+            <div class="gallery-item">
+                <img src="img/mango4.jpg" alt="Mango the bird">
+                <div class="gallery-caption">Mango all snuggled up!</div>
+            </div>
+            <div class="gallery-item">
+                <img src="img/mango5.jpg" alt="Mango the bird">
+                <div class="gallery-caption">Bald Mango!</div>
+            </div>
+            <div class="gallery-item">
+                <img src="img/lucky.png" alt="Lucky the bird" style="object-fit: cover; width: 100%;">
+                <div class="gallery-caption">Rest in Peace, Lucky <3</div>
+            </div>
+        </div>
+    </div>
+    
+    <a href="index.html" class="back-button">BACK TO MY ROOM</a>
+</body>
+</html> 
