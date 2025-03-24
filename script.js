@@ -14,58 +14,50 @@ roomImage.src = "img/room-background.png";
 characterImage.src = "img/character.png";
 
 // Define interactive areas and their actions
+// These coordinates are RELATIVE to the room image (NOT absolute canvas coordinates)
 const interactiveAreas = [
-    // hover message is disabled
     {
         name: "Macbook",
-        x: 1010, // Example coordinates - adjust based on actual room image
-        y: 400,
-        width: 30,
-        height: 30,
-        hoverMessage: "My laptop setup...",
+        relX: 0.685, // Position as percentage of room width (0-1)
+        relY: 0.47, // Position as percentage of room height (0-1)
+        relWidth: 0.03, // Width as percentage of room width
+        relHeight: 0.05, // Height as percentage of room height
         message: "This is my lapytopy where I code and study!",
-        link: "https://github.com/HermioneHacks" // Replace with your GitHub or portfolio link
+        link: "https://github.com/HermioneHacks"
     },
     {
         name: "bed",
-        x: 500, // Example coordinates - adjust based on actual room image
-        y: 400,
-        width: 100,
-        height: 100,
-        hoverMessage: "My cozy bed...",
+        relX: 0.31,
+        relY: 0.45,
+        relWidth: 0.1, 
+        relHeight: 0.2,
         message: "My cozy bed...!"
     },
     {
         name: "bookshelf",
-        x: 800, // Example coordinates - adjust based on actual room image
-        y: 200,
-        width: 150,
-        height: 70,
-        hoverMessage: "My collection of candy and perfume...",
-        message: "This is my bookshelf, where I keep my trinkets!",
-        //link: "https://yourfavoritebooks.com" // Optional link
+        relX: 0.53,
+        relY: 0.25,
+        relWidth: 0.15,
+        relHeight: 0.08,
+        message: "This is my bookshelf, where I keep my trinkets!"
     },
     {
         name: "iPad",
-        x: 970, // Example coordinates - adjust based on actual room image
-        y: 400,
-        width: 20,
-        height: 20,
-        //hoverMessage: "My iPad...",
-        message: "This is my iPad where I watch my favorite shows and take notes!",
-        //link: "https://github.com/HermioneHacks" // Replace with new page link
+        relX: 0.655,
+        relY: 0.475,
+        relWidth: 0.015,
+        relHeight: 0.03,
+        message: "This is my iPad where I watch my favorite shows and take notes!"
     },
     {
         name: "turtle",
-        x: 670, // Example coordinates - adjust based on actual room image
-        y: 410,
-        width: 30,
-        height: 30,
-        hoverMessage: "My dear turtle...",
+        relX: 0.43,
+        relY: 0.50,
+        relWidth: 0.03,
+        relHeight: 0.03,
         message: "This is Sir Bartholomew Oswald van Beethoven the Third!",
-        link: "https://www.ikea.com/us/en/p/blavingad-soft-toy-turtle-green-10532041/" // Ikea link!
-    },
-    // Add more interactive areas as needed
+        link: "https://www.ikea.com/us/en/p/blavingad-soft-toy-turtle-green-10532041/"
+    }
 ];
 
 // Current speech bubble text
@@ -73,6 +65,7 @@ let currentMessage = "I designed, drew, and coded everything for this page inclu
 let defaultMessage = "Hover and Click objects to explore!";
 let hoveredArea = null;
 let showNextButton = true; // Flag to control Next button visibility
+let debugMode = false; // Show all interactive areas for positioning
 
 // Track how many images have loaded
 let imagesLoaded = 0;
@@ -97,6 +90,13 @@ function handleCanvasClick(event) {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     
+    // Calculate room dimensions and position
+    const scaleFactor = 3;
+    const roomWidth = roomImage.width * scaleFactor;
+    const roomHeight = roomImage.height * scaleFactor;
+    const roomX = (canvas.width - roomWidth) / 2;
+    const roomY = (canvas.height - roomHeight) / 2;
+    
     // Check if click is on the Next button
     if (showNextButton) {
         // Next button dimensions and position
@@ -116,8 +116,14 @@ function handleCanvasClick(event) {
     
     // Check if click is within any interactive area
     for (const area of interactiveAreas) {
-        if (x >= area.x && x <= area.x + area.width && 
-            y >= area.y && y <= area.y + area.height) {
+        // Convert relative coordinates to absolute canvas coordinates
+        const areaX = roomX + (area.relX * roomWidth);
+        const areaY = roomY + (area.relY * roomHeight);
+        const areaWidth = area.relWidth * roomWidth;
+        const areaHeight = area.relHeight * roomHeight;
+        
+        if (x >= areaX && x <= areaX + areaWidth && 
+            y >= areaY && y <= areaY + areaHeight) {
             
             // Update speech bubble
             currentMessage = area.message;
@@ -141,6 +147,13 @@ function handleMouseMove(event) {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     
+    // Calculate room dimensions and position
+    const scaleFactor = 3;
+    const roomWidth = roomImage.width * scaleFactor;
+    const roomHeight = roomImage.height * scaleFactor;
+    const roomX = (canvas.width - roomWidth) / 2;
+    const roomY = (canvas.height - roomHeight) / 2;
+    
     // Check if mouse is over the Next button
     if (showNextButton) {
         const nextButtonX = 150;
@@ -161,9 +174,21 @@ function handleMouseMove(event) {
     if (!showNextButton) {
         // Check if mouse is over any interactive area
         for (const area of interactiveAreas) {
-            if (x >= area.x && x <= area.x + area.width && 
-                y >= area.y && y <= area.y + area.height) {
-                hoveredArea = area;
+            // Convert relative coordinates to absolute canvas coordinates
+            const areaX = roomX + (area.relX * roomWidth);
+            const areaY = roomY + (area.relY * roomHeight);
+            const areaWidth = area.relWidth * roomWidth;
+            const areaHeight = area.relHeight * roomHeight;
+            
+            if (x >= areaX && x <= areaX + areaWidth && 
+                y >= areaY && y <= areaY + areaHeight) {
+                hoveredArea = {
+                    ...area,
+                    x: areaX,
+                    y: areaY,
+                    width: areaWidth,
+                    height: areaHeight
+                };
                 foundHover = true;
                 document.body.style.cursor = 'pointer'; // Change cursor to pointer
                 
@@ -200,8 +225,36 @@ function drawScene() {
 
     ctx.drawImage(roomImage, xOffset, yOffset, newWidth, newHeight);
     
+    // Draw all interactive areas in debug mode
+    if (debugMode) {
+        // Calculate room dimensions and position
+        const roomWidth = roomImage.width * scaleFactor;
+        const roomHeight = roomImage.height * scaleFactor;
+        const roomX = (canvas.width - roomWidth) / 2;
+        const roomY = (canvas.height - roomHeight) / 2;
+        
+        for (const area of interactiveAreas) {
+            // Convert relative coordinates to absolute canvas coordinates
+            const areaX = roomX + (area.relX * roomWidth);
+            const areaY = roomY + (area.relY * roomHeight);
+            const areaWidth = area.relWidth * roomWidth;
+            const areaHeight = area.relHeight * roomHeight;
+            
+            // Draw box for each area with a different color
+            ctx.strokeStyle = '#FF0000'; // Red boxes for debug
+            ctx.lineWidth = 2;
+            ctx.strokeRect(areaX, areaY, areaWidth, areaHeight);
+            
+            // Add name label
+            ctx.fillStyle = "white";
+            ctx.fillRect(areaX, areaY - 20, area.name.length * 8, 20);
+            ctx.fillStyle = "black";
+            ctx.font = "12px Arial";
+            ctx.fillText(area.name, areaX + 5, areaY - 5);
+        }
+    }
     // Draw highlight for hovered area
-    if (hoveredArea && !showNextButton) {
+    else if (hoveredArea && !showNextButton) {
         ctx.strokeStyle = '#FF9900';
         ctx.lineWidth = 3;
         ctx.strokeRect(hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
@@ -233,6 +286,15 @@ function drawScene() {
         ctx.fillStyle = "white";
         ctx.font = "14px Arial";
         ctx.fillText("Next", 175, 230);
+    }
+    
+    // Add debug mode instructions
+    if (debugMode) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(canvas.width - 220, 10, 210, 30);
+        ctx.fillStyle = "white";
+        ctx.font = "14px Arial";
+        ctx.fillText("Press 'D' to toggle debug mode", canvas.width - 210, 30);
     }
 }
 
@@ -268,4 +330,12 @@ window.addEventListener('resize', function() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     ctx.imageSmoothingEnabled = false;
+});
+
+// Handle keyboard events for debug mode
+window.addEventListener('keydown', function(event) {
+    // Toggle debug mode when 'D' is pressed
+    if (event.key === 'd' || event.key === 'D') {
+        debugMode = !debugMode;
+    }
 });
