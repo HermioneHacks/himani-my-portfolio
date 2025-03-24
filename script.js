@@ -65,7 +65,7 @@ const interactiveAreas = [
         relWidth: 0.03,
         relHeight: 0.055,
         message: "This is my bird Mango! Click to see more photos!",
-        link: "mango-collage.html"
+        link: "mango-page.html"
     }
 ];
 
