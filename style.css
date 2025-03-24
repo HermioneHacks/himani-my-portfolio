@@ -1,10 +1,9 @@
 body {
-    background-image: url("img/background-image.png"); /* Replace with your image file */
-    background-size: 50%;
-    background-size: auto;  /* Ensures the background is at its natural size */
-    background-position: center; /* Centers the background */
-    background-repeat: repeat;  /* Tile the background instead of stretching */
+    background-image: url("img/512background-image.png");
+    background-size: 1024px 1024px; /* Make the pattern much larger */
+    background-repeat: repeat;
     image-rendering: pixelated;
+    image-rendering: -webkit-optimize-contrast; /* Additional property for webkit browsers */
 }
 
 canvas {
