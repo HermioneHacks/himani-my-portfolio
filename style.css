@@ -9,4 +9,19 @@ body {
 canvas {
     /*display: block;*/
     image-rendering: pixelated; /* Ensures crisp pixel art */
+    position: relative;
+    z-index: 1;
+}
+
+#animatedCharacter {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    pointer-events: none;
+    z-index: 10;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
