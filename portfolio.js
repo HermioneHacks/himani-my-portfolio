@@ -1,4 +1,4 @@
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("screenCanvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
@@ -6,15 +6,11 @@ canvas.height = window.innerHeight;
 
 ctx.imageSmoothingEnabled = false;
 
-// Always attach event listeners, regardless of image load
-canvas.addEventListener('click', handleCanvasClick);
-canvas.addEventListener('mousemove', handleMouseMove);
-
 // Load all images
-const roomImage = new Image();
+const screenImage = new Image();
 const characterStaticImage = new Image();
 
-roomImage.src = "img/room-background.png";
+screenImage.src = "img/screen.png";
 characterStaticImage.src = "img/mestatic.png";
 
 // Create animated character element
@@ -34,7 +30,6 @@ let glitchStartTime = null;
 let showBoxes = false;
 let showSpeechBubble = true;
 let showRecruiterBox = true;
-let showBackButton = false;
 
 // Define interactive areas and their actions
 // These coordinates are RELATIVE to the room image (NOT absolute canvas coordinates)
@@ -120,10 +115,8 @@ const UI = {
 };
 
 // Current speech bubble text
-let currentMessage = "I designed, drew, and coded everything for this page including the pixel art!";
-let defaultMessage = "Hover and Click objects to explore!";
+let currentMessage = "Here is my portfolio: Click on the icons below to explore, and scroll on the page to see more!";
 let hoveredArea = null;
-let showNextButton = true; // Flag to control Next button visibility
 let debugMode = false; // Show all interactive areas for positioning
 
 // Track how many images have loaded
@@ -136,11 +129,14 @@ function checkAllImagesLoaded() {
     imagesLoaded++;
     if (imagesLoaded === 2) { // Only waiting for 2 images now
         gameLoop();
+        // Add click listener once images are loaded
+        canvas.addEventListener('click', handleCanvasClick);
+        canvas.addEventListener('mousemove', handleMouseMove);
     }
 }
 
 // Set up onload listeners
-roomImage.onload = checkAllImagesLoaded;
+screenImage.onload = checkAllImagesLoaded;
 characterStaticImage.onload = checkAllImagesLoaded;
 
 // Function to update character position
@@ -156,20 +152,20 @@ function drawScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw room (with scaling)
-    const scaleFactor = 3;
-    const newWidth = roomImage.width * scaleFactor;
-    const newHeight = roomImage.height * scaleFactor;
+    const scaleFactor = 9.5;
+    const newWidth = screenImage.width * scaleFactor;
+    const newHeight = screenImage.height * scaleFactor;
 
-    const xOffset = (canvas.width - newWidth) / 2;
+    const xOffset = (canvas.width - newWidth) + 2 / 2;
     const yOffset = (canvas.height - newHeight) / 2;
 
-    ctx.drawImage(roomImage, xOffset, yOffset, newWidth, newHeight);
+    ctx.drawImage(screenImage, xOffset, yOffset, newWidth, newHeight);
     
     // Draw all interactive areas in debug mode
     if (debugMode) {
         // Calculate room dimensions and position
-        const roomWidth = roomImage.width * scaleFactor;
-        const roomHeight = roomImage.height * scaleFactor;
+        const roomWidth = screenImage.width * scaleFactor;
+        const roomHeight = screenImage.height * scaleFactor;
         const roomX = (canvas.width - roomWidth) / 2;
         const roomY = (canvas.height - roomHeight) / 2;
         
@@ -194,7 +190,7 @@ function drawScene() {
         }
     }
     // Draw highlight for hovered area
-    else if (hoveredArea && !showNextButton) {
+    else if (hoveredArea && !showSpeechBubble) {
         ctx.strokeStyle = '#FF9900';
         ctx.lineWidth = 3;
         ctx.strokeRect(hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
@@ -277,30 +273,13 @@ function drawScene() {
             const fontSize = Math.max(12, Math.min(16, canvas.width / 90));
             ctx.font = `${fontSize}px 'Press Start 2P'`;
             wrapText(ctx, currentMessage, bubbleX + 15, bubbleY + 28, bubbleWidth - 30, fontSize + 5);
-
-            // Draw Next button if needed (INSIDE the speech bubble)
-            if (showNextButton) {
-                const buttonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
-                const buttonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
-                const buttonX = bubbleX + (bubbleWidth - buttonWidth) / 2;
-                const buttonY = bubbleY + bubbleHeight - buttonHeight - 12;
-                ctx.fillStyle = "#4CAF50";
-                ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-                ctx.strokeStyle = "#248536";
-                ctx.lineWidth = 3;
-                ctx.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
-                ctx.fillStyle = "white";
-                ctx.font = `bold ${Math.max(12, Math.min(14, canvas.width / 100))}px 'Press Start 2P'`;
-                const textWidth = ctx.measureText("NEXT").width;
-                ctx.fillText("NEXT", buttonX + (buttonWidth - textWidth)/2, buttonY + buttonHeight/2 + 6);
-            }
         }
 
         // --- Draw recruiter/contact box ---
         if (showRecruiterBox) {
             const recruiterSpacing = canvas.height * 0.02;
             const contactBoxWidth = bubbleWidth;
-            const contactBoxHeight = bubbleHeight * 1;
+            const contactBoxHeight = bubbleHeight * 1.1;
             const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
             const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
 
@@ -313,51 +292,23 @@ function drawScene() {
             ctx.fillStyle = "black";
             const fontSize = Math.max(12, Math.min(16, canvas.width / 90));
             ctx.font = `${fontSize}px 'Press Start 2P'`;
-            wrapText(ctx, "If you are a recruiter or interested in my work click here:", contactBoxX + 15, contactBoxY + 28, contactBoxWidth - 30, fontSize + 5);
+            wrapText(ctx, "If you are interested in knowing more about me, click on the first next button!", contactBoxX + 15, contactBoxY + 28, contactBoxWidth - 30, fontSize + 5);
 
             // --- Draw contact button (same as NEXT, inside recruiter box) ---
             const contactButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
             const contactButtonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
             const contactButtonX = contactBoxX + (contactBoxWidth - contactButtonWidth) / 2;
             const contactButtonY = contactBoxY + contactBoxHeight - contactButtonHeight - 12;
-            ctx.fillStyle = "#4CAF50";
+            ctx.fillStyle = "#ff9900"; // orange fill
             ctx.fillRect(contactButtonX, contactButtonY, contactButtonWidth, contactButtonHeight);
-            ctx.strokeStyle = "#248536";
+            ctx.strokeStyle = "#e68a00"; // orange border
             ctx.lineWidth = 3;
             ctx.strokeRect(contactButtonX, contactButtonY, contactButtonWidth, contactButtonHeight);
             ctx.fillStyle = "white";
             ctx.font = `bold ${Math.max(12, Math.min(14, canvas.width / 100))}px 'Press Start 2P'`;
-            const contactText = "NEXT";
+            const contactText = "BACK";
             const contactTextWidth = ctx.measureText(contactText).width;
             ctx.fillText(contactText, contactButtonX + (contactButtonWidth - contactTextWidth)/2, contactButtonY + contactButtonHeight/2 + 6);
-        }
-
-        // Draw BACK button if showBackButton is true
-        if (showBackButton && !showNextButton && !showRecruiterBox) {
-            // Draw BACK button in the same place as recruiter box button, but a lot higher and orange
-            const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
-            const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
-            const bubbleX = canvas.width * UI.speechBubble.relX;
-            const bubbleY = canvas.height * UI.speechBubble.relY;
-            const recruiterSpacing = canvas.height * 0.02;
-            const contactBoxWidth = bubbleWidth;
-            const contactBoxHeight = bubbleHeight * 1.1;
-            const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
-            const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
-            const backButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
-            const backButtonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
-            const backButtonX = contactBoxX + (contactBoxWidth - backButtonWidth) / 2;
-            // Move the button a lot higher by increasing the offset (e.g., 120 instead of 32)
-            const backButtonY = contactBoxY + contactBoxHeight - backButtonHeight - 120;
-            ctx.fillStyle = "#ff9900";
-            ctx.fillRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-            ctx.strokeStyle = "#e68a00";
-            ctx.lineWidth = 3;
-            ctx.strokeRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-            ctx.fillStyle = "white";
-            ctx.font = `bold ${Math.max(12, Math.min(14, canvas.width / 100))}px 'Press Start 2P'`;
-            const textWidth = ctx.measureText("BACK").width;
-            ctx.fillText("BACK", backButtonX + (backButtonWidth - textWidth)/2, backButtonY + backButtonHeight/2 + 6);
         }
     }
     
@@ -421,122 +372,68 @@ function handleMouseMove(event) {
     
     // Calculate room dimensions and position
     const scaleFactor = 3;
-    const roomWidth = roomImage.width * scaleFactor;
-    const roomHeight = roomImage.height * scaleFactor;
+    const roomWidth = screenImage.width * scaleFactor;
+    const roomHeight = screenImage.height * scaleFactor;
     const roomX = (canvas.width - roomWidth) / 2;
     const roomY = (canvas.height - roomHeight) / 2;
     
     let isOverInteractiveElement = false;
     
-    // Check if mouse is over the Next button (speech bubble)
-    if (showNextButton) {
-        // Calculate button dimensions and position (responsive)
-        const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
-        const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
-        const bubbleX = canvas.width * UI.speechBubble.relX;
-        const bubbleY = canvas.height * UI.speechBubble.relY;
+    // Check if mouse is over any interactive area
+    for (const area of interactiveAreas) {
+        // Convert relative coordinates to absolute canvas coordinates
+        const areaX = roomX + (area.relX * roomWidth);
+        const areaY = roomY + (area.relY * roomHeight);
+        const areaWidth = area.relWidth * roomWidth;
+        const areaHeight = area.relHeight * roomHeight;
         
-        const buttonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
-        const buttonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
-        const buttonX = bubbleX + (bubbleWidth - buttonWidth) / 2;
-        const buttonY = bubbleY + bubbleHeight - buttonHeight - 12;
-        if (
-            x >= buttonX && x <= buttonX + buttonWidth &&
-            y >= buttonY && y <= buttonY + buttonHeight
-        ) {
-            document.body.style.cursor = 'pointer';
+        if (x >= areaX && x <= areaX + areaWidth && 
+            y >= areaY && y <= areaY + areaHeight) {
+            hoveredArea = {
+                ...area,
+                x: areaX,
+                y: areaY,
+                width: areaWidth,
+                height: areaHeight
+            };
             isOverInteractiveElement = true;
+            document.body.style.cursor = 'pointer';
+            break;
         }
     }
-    
-    // Only process hover effects for interactive areas if Next button is not showing
-    if (!showNextButton) {
-        // Check if mouse is over any interactive area
-        for (const area of interactiveAreas) {
-            // Convert relative coordinates to absolute canvas coordinates
-            const areaX = roomX + (area.relX * roomWidth);
-            const areaY = roomY + (area.relY * roomHeight);
-            const areaWidth = area.relWidth * roomWidth;
-            const areaHeight = area.relHeight * roomHeight;
-            
-            if (x >= areaX && x <= areaX + areaWidth && 
-                y >= areaY && y <= areaY + areaHeight) {
-                hoveredArea = {
-                    ...area,
-                    x: areaX,
-                    y: areaY,
-                    width: areaWidth,
-                    height: areaHeight
-                };
-                isOverInteractiveElement = true;
+
+    // Check if mouse is over any canvas-drawn button (NEXT/BACK)
+    if (!isOverInteractiveElement) {
+        // Recruiter/contact box button
+        if (showBoxes && showRecruiterBox) {
+            const recruiterSpacing = canvas.height * 0.02;
+            const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
+            const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
+            const bubbleX = canvas.width * UI.speechBubble.relX;
+            const bubbleY = canvas.height * UI.speechBubble.relY;
+            const contactBoxWidth = bubbleWidth;
+            const contactBoxHeight = bubbleHeight * 1.1;
+            const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
+            const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
+            const contactButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
+            const contactButtonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
+            const contactButtonX = contactBoxX + (contactBoxWidth - contactButtonWidth) / 2;
+            const contactButtonY = contactBoxY + contactBoxHeight - contactButtonHeight - 12;
+            if (
+                x >= contactButtonX && x <= contactButtonX + contactButtonWidth &&
+                y >= contactButtonY && y <= contactButtonY + contactButtonHeight
+            ) {
                 document.body.style.cursor = 'pointer';
-                currentMessage = area.message;
-                break;
+                return;
             }
         }
+        // (Optional) If you ever re-enable the speech bubble NEXT button, add similar logic here
     }
 
-    // Check if mouse is over recruiter/contact box NEXT button
-    if (!isOverInteractiveElement && showBoxes && showRecruiterBox) {
-        const recruiterSpacing = canvas.height * 0.02;
-        const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
-        const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
-        const bubbleX = canvas.width * UI.speechBubble.relX;
-        const bubbleY = canvas.height * UI.speechBubble.relY;
-        const contactBoxWidth = bubbleWidth;
-        const contactBoxHeight = bubbleHeight * 1;
-        const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
-        const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
-        const contactButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
-        const contactButtonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
-        const contactButtonX = contactBoxX + (contactBoxWidth - contactButtonWidth) / 2;
-        const contactButtonY = contactBoxY + contactBoxHeight - contactButtonHeight - 12;
-        if (
-            x >= contactButtonX && x <= contactButtonX + contactButtonWidth &&
-            y >= contactButtonY && y <= contactButtonY + contactButtonHeight
-        ) {
-            document.body.style.cursor = 'pointer';
-            return;
-        }
-    }
-
-    // Check if mouse is over BACK button
-    if (showBackButton && !showNextButton && !showRecruiterBox) {
-        const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
-        const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
-        const bubbleX = canvas.width * UI.speechBubble.relX;
-        const bubbleY = canvas.height * UI.speechBubble.relY;
-        const recruiterSpacing = canvas.height * 0.02;
-        const contactBoxWidth = bubbleWidth;
-        const contactBoxHeight = bubbleHeight * 1.1;
-        const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
-        const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
-        const backButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
-        const backButtonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
-        const backButtonX = contactBoxX + (contactBoxWidth - backButtonWidth) / 2;
-        // Move the button a lot higher by increasing the offset (e.g., 120 instead of 32)
-        const backButtonY = contactBoxY + contactBoxHeight - backButtonHeight - 120;
-        if (
-            x >= backButtonX && x <= backButtonX + backButtonWidth &&
-            y >= backButtonY && y <= backButtonY + backButtonHeight
-        ) {
-            document.body.style.cursor = 'pointer';
-            return;
-        }
-    }
-
-    // Update character animation state
-    if (isOverInteractiveElement && !isCharacterAnimated) {
-        isCharacterAnimated = true;
-        animatedCharacter.style.display = 'block';
-    } else if (!isOverInteractiveElement && isCharacterAnimated) {
-        isCharacterAnimated = false;
-        animatedCharacter.style.display = 'none';
-        hoveredArea = null;
+    // If not over any interactive element or button, reset cursor
+    if (!isOverInteractiveElement) {
         document.body.style.cursor = 'default';
-        if (!showNextButton) {
-            currentMessage = defaultMessage;
-        }
+        hoveredArea = null;
     }
 }
 
@@ -548,32 +445,16 @@ function handleCanvasClick(event) {
 
     // Only allow button clicks if boxes are visible
     if (showBoxes) {
-        // Speech bubble NEXT button
-        if (showSpeechBubble && showNextButton) {
-            const buttonWidth = canvas.width * UI.speechBubble.relWidth;
-            const buttonHeight = canvas.height * UI.speechBubble.relHeight;
-            const buttonX = canvas.width * UI.speechBubble.relX;
-            const buttonY = canvas.height * UI.speechBubble.relY;
-            if (
-                x >= buttonX && x <= buttonX + buttonWidth &&
-                y >= buttonY && y <= buttonY + buttonHeight
-            ) {
-                currentMessage = defaultMessage;
-                showNextButton = false;
-                showRecruiterBox = false;
-                showBackButton = true;
-                return;
-            }
-        }
         // Recruiter NEXT button (inside recruiter box)
         if (showRecruiterBox) {
+            // Use the same calculation as in drawScene()
             const recruiterSpacing = canvas.height * 0.02;
             const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
             const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
             const bubbleX = canvas.width * UI.speechBubble.relX;
             const bubbleY = canvas.height * UI.speechBubble.relY;
             const contactBoxWidth = bubbleWidth;
-            const contactBoxHeight = bubbleHeight * 1;
+            const contactBoxHeight = bubbleHeight * 1.1;
             const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
             const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
             const contactButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
@@ -584,62 +465,43 @@ function handleCanvasClick(event) {
                 x >= contactButtonX && x <= contactButtonX + contactButtonWidth &&
                 y >= contactButtonY && y <= contactButtonY + contactButtonHeight
             ) {
-                window.location.href = 'portfolio.html';
+                window.location.href = 'index.html';
                 return;
-            }
-        }
-        // Interactive areas only clickable after recruiter box is gone and NEXT is gone
-        if (!showNextButton && !showRecruiterBox) {
-            for (const area of interactiveAreas) {
-                // Convert relative coordinates to absolute canvas coordinates
-                const scaleFactor = 3;
-                const roomWidth = roomImage.width * scaleFactor;
-                const roomHeight = roomImage.height * scaleFactor;
-                const roomX = (canvas.width - roomWidth) / 2;
-                const roomY = (canvas.height - roomHeight) / 2;
-                const areaX = roomX + (area.relX * roomWidth);
-                const areaY = roomY + (area.relY * roomHeight);
-                const areaWidth = area.relWidth * roomWidth;
-                const areaHeight = area.relHeight * roomHeight;
-                if (x >= areaX && x <= areaX + areaWidth && 
-                    y >= areaY && y <= areaY + areaHeight) {
-                    // Update speech bubble
-                    currentMessage = area.message;
-                    showNextButton = false; // Hide Next button when interacting with objects
-                    // Open link if available
-                    if (area.link) {
-                        setTimeout(() => {
-                            window.open(area.link, '_blank');
-                        }, 1000); // Small delay before opening link
-                    }
-                    break;
-                }
             }
         }
     }
 
-    // Handle click on BACK button
-    if (showBackButton && !showNextButton && !showRecruiterBox) {
-        const bubbleWidth = canvas.width * UI.speechBubble.relWidth;
-        const bubbleHeight = canvas.height * UI.speechBubble.relHeight;
-        const bubbleX = canvas.width * UI.speechBubble.relX;
-        const bubbleY = canvas.height * UI.speechBubble.relY;
-        const recruiterSpacing = canvas.height * 0.02;
-        const contactBoxWidth = bubbleWidth;
-        const contactBoxHeight = bubbleHeight * 1.1;
-        const contactBoxX = bubbleX + (bubbleWidth - contactBoxWidth) / 2;
-        const contactBoxY = bubbleY + bubbleHeight + recruiterSpacing;
-        const backButtonWidth = canvas.width * UI.nextButton.relWidth * 1.1;
-        const backButtonHeight = canvas.height * UI.nextButton.relHeight * 1.1;
-        const backButtonX = contactBoxX + (contactBoxWidth - backButtonWidth) / 2;
-        // Move the button a lot higher by increasing the offset (e.g., 120 instead of 32)
-        const backButtonY = contactBoxY + contactBoxHeight - backButtonHeight - 140;
-        if (
-            x >= backButtonX && x <= backButtonX + backButtonWidth &&
-            y >= backButtonY && y <= backButtonY + backButtonHeight
-        ) {
-            window.location.reload();
-            return;
+    // Check if click is within any interactive area
+    for (const area of interactiveAreas) {
+        // Convert relative coordinates to absolute canvas coordinates
+        const areaX = roomX + (area.relX * roomWidth);
+        const areaY = roomY + (area.relY * roomHeight);
+        const areaWidth = area.relWidth * roomWidth;
+        const areaHeight = area.relHeight * roomHeight;
+        
+        if (x >= areaX && x <= areaX + areaWidth && 
+            y >= areaY && y <= areaY + areaHeight) {
+            
+            // Update speech bubble
+            currentMessage = area.message;
+            
+            // Open link if available
+            if (area.link) {
+                setTimeout(() => {
+                    window.open(area.link, '_blank');
+                }, 1000); // Small delay before opening link
+            }
+            
+            break;
         }
     }
 }
+
+// Create BACK button as a floating HTML button
+const backBtn = document.createElement('button');
+backBtn.textContent = 'BACK';
+backBtn.classList.add('portfolio-back-btn');
+backBtn.onclick = function() {
+    window.location.href = 'index.html';
+};
+document.body.appendChild(backBtn);
