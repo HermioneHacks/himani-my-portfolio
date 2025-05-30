@@ -14,13 +14,13 @@ canvas.addEventListener('mousemove', handleMouseMove);
 const roomImage = new Image();
 const characterStaticImage = new Image();
 
-roomImage.src = "img/room-background.png";
-characterStaticImage.src = "img/mestatic.png";
+roomImage.src = "img/room_background.png";
+characterStaticImage.src = "img/me_static.png";
 
 // Create animated character element
 const animatedCharacter = document.createElement('div');
 animatedCharacter.id = 'animatedCharacter';
-animatedCharacter.style.backgroundImage = 'url("img/megif.gif")';
+animatedCharacter.style.backgroundImage = 'url("img/me_gif.gif")';
 document.body.appendChild(animatedCharacter);
 
 let isCharacterAnimated = false;

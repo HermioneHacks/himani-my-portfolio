@@ -11,12 +11,12 @@ const screenImage = new Image();
 const characterStaticImage = new Image();
 
 screenImage.src = "img/screen.png";
-characterStaticImage.src = "img/mestatic.png";
+characterStaticImage.src = "img/me_static.png";
 
 // Create animated character element
 const animatedCharacter = document.createElement('div');
 animatedCharacter.id = 'animatedCharacter';
-animatedCharacter.style.backgroundImage = 'url("img/megif.gif")';
+animatedCharacter.style.backgroundImage = 'url("img/me_gif.gif")';
 document.body.appendChild(animatedCharacter);
 
 let isCharacterAnimated = false;
@@ -115,7 +115,7 @@ const UI = {
 };
 
 // Current speech bubble text
-let currentMessage = "Here is my portfolio: Click on the icons below to explore, and scroll on the page to see more!";
+let currentMessage = "Here is my portfolio: Click on the icons below to explore, and scroll on the pop up to see more!";
 let hoveredArea = null;
 let debugMode = false; // Show all interactive areas for positioning
 
@@ -497,11 +497,100 @@ function handleCanvasClick(event) {
     }
 }
 
-// Create BACK button as a floating HTML button
-const backBtn = document.createElement('button');
-backBtn.textContent = 'BACK';
-backBtn.classList.add('portfolio-back-btn');
-backBtn.onclick = function() {
-    window.location.href = 'index.html';
-};
-document.body.appendChild(backBtn);
+// --- Centered Responsive Icons ---
+function addIcons() {
+  // Remove if already present
+  const old = document.getElementById('icons');
+  if (old) old.remove();
+
+  const iconContainer = document.createElement('div');
+  iconContainer.id = 'icons';
+  iconContainer.style.position = 'absolute';
+  iconContainer.style.left = '48%';
+  iconContainer.style.transform = 'translateX(-50%)';
+  iconContainer.style.bottom = '4.4vh'; // Responsive from bottom
+  iconContainer.style.display = 'flex';
+  iconContainer.style.gap = '5px';
+  iconContainer.style.zIndex = 100;
+
+  // About Me icon
+  const meIcon = document.createElement('img');
+  meIcon.src = 'img/me_icon.png';
+  meIcon.alt = 'About Me';
+  meIcon.style.width = '48px';
+  meIcon.style.height = '48px';
+  meIcon.style.imageRendering = 'pixelated';
+  iconContainer.appendChild(meIcon);
+
+  // Stock/Projects icon
+  const stockIcon = document.createElement('img');
+  stockIcon.src = 'img/stock_icon.png';
+  stockIcon.alt = 'Projects';
+  stockIcon.style.width = '48px';
+  stockIcon.style.height = '48px';
+  stockIcon.style.imageRendering = 'pixelated';
+  iconContainer.appendChild(stockIcon);
+
+  document.body.appendChild(iconContainer);
+}
+
+// Call on load and on resize
+addIcons();
+window.addEventListener('resize', addIcons);
+// --- End Centered Responsive Icons ---
+
+// --- XP Taskbar Clock ---
+function addXPClock() {
+  let clock = document.getElementById('xpClock');
+  if (!clock) {
+    clock = document.createElement('div');
+    clock.id = 'xpClock';
+    clock.style.position = 'absolute';
+    clock.style.right = '38px'; // adjust as needed
+    clock.style.bottom = '45px'; // adjust as needed
+    clock.style.background = 'transparent';
+    clock.style.color = 'white';
+    clock.style.fontFamily = "'Press Start 2P', monospace";
+    clock.style.fontSize = '13px';
+    clock.style.padding = '6px 16px';
+    clock.style.borderRadius = '';
+    clock.style.boxShadow = '';
+    clock.style.zIndex = 101;
+    document.body.appendChild(clock);
+  }
+  function updateClock() {
+    const now = new Date();
+    // Format as HH:MM (24h)
+    const h = now.getHours().toString().padStart(2, '0');
+    const m = now.getMinutes().toString().padStart(2, '0');
+    clock.textContent = `${h}:${m}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+addXPClock();
+// --- End XP Taskbar Clock ---
+
+// --- Windows Text ---
+function addWindowsText() {
+    let winText = document.getElementById('windowsText');
+    if (!winText) {
+      winText = document.createElement('div');
+      winText.id = 'windowsText';
+      winText.textContent = 'Windows';
+      winText.style.position = 'absolute';
+      winText.style.left = '501px'; // adjust as needed
+      winText.style.bottom = '40px'; // adjust as needed
+      winText.style.background = 'transparent';
+      winText.style.color = 'white';
+      winText.style.fontFamily = "'Press Start 2P', monospace";
+      winText.style.fontSize = '17px';
+      winText.style.padding = '8px 18px';
+      winText.style.letterSpacing = '2px';
+      winText.style.zIndex = 100;
+      document.body.appendChild(winText);
+    }
+  }
+  addWindowsText();
+  window.addEventListener('resize', addWindowsText);
+// --- End Windows Text ---
