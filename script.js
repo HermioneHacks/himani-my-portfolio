@@ -13,9 +13,21 @@ canvas.addEventListener('mousemove', handleMouseMove);
 // Load all images
 const roomImage = new Image();
 const characterStaticImage = new Image();
+const turtleHighlightImage = new Image();
+const bedHighlightImage = new Image();
+const shelfHighlightImage = new Image();
+const ipadHighlightImage = new Image();
+const compHighlightImage = new Image();
+const blockIHighlightImage = new Image();
 
 roomImage.src = "img/room_background.png";
 characterStaticImage.src = "img/me_static.png";
+turtleHighlightImage.src = "img/turtle_highlight.png";
+bedHighlightImage.src = "img/Bed_highlight.png";
+shelfHighlightImage.src = "img/Shelf_highlight.png";
+ipadHighlightImage.src = "img/ipad_highlight.png";
+compHighlightImage.src = "img/comp_highlight.png";
+blockIHighlightImage.src = "img/Block_I_highlight.png";
 
 // Create animated character element
 const animatedCharacter = document.createElement('div');
@@ -41,45 +53,45 @@ let showBackButton = false;
 const interactiveAreas = [
     {
         name: "Macbook",
-        relX: 0.685, // Position as percentage of room width (0-1)
-        relY: 0.47, // Position as percentage of room height (0-1)
-        relWidth: 0.03, // Width as percentage of room width
-        relHeight: 0.05, // Height as percentage of room height
+        relX: 0.672, // Position as percentage of room width (0-1)
+        relY: 0.457, // Position as percentage of room height (0-1)
+        relWidth: 0.055, // Width as percentage of room width
+        relHeight: 0.095, // Height as percentage of room height
         message: "This is my lapytopy where I code and study!",
         link: "https://github.com/HermioneHacks"
     },
     {
+        name: "turtle",
+        relX: 0.42,
+        relY: 0.48,
+        relWidth: 0.05,
+        relHeight: 0.08,
+        message: "This is Sir Bartholomew Oswald van Beethoven the Third!",
+        link: "https://www.ikea.com/us/en/p/blavingad-soft-toy-turtle-green-10532041/"
+    },
+    {
         name: "bed",
-        relX: 0.31,
-        relY: 0.45,
-        relWidth: 0.1, 
-        relHeight: 0.2,
+        relX: 0.311,
+        relY: 0.375,
+        relWidth: 0.27, 
+        relHeight: 0.39,
         message: "My cozy bed...!"
     },
     {
         name: "bookshelf",
-        relX: 0.53,
-        relY: 0.25,
-        relWidth: 0.15,
-        relHeight: 0.08,
+        relX: 0.530,
+        relY: 0.193,
+        relWidth: 0.175,
+        relHeight: 0.22,
         message: "This is my bookshelf, where I keep my trinkets!"
     },
     {
         name: "iPad",
-        relX: 0.655,
-        relY: 0.475,
-        relWidth: 0.015,
-        relHeight: 0.03,
+        relX: 0.65,
+        relY: 0.473,
+        relWidth: 0.027,
+        relHeight: 0.075,
         message: "This is my iPad where I watch my favorite shows and take notes!"
-    },
-    {
-        name: "turtle",
-        relX: 0.43,
-        relY: 0.50,
-        relWidth: 0.03,
-        relHeight: 0.03,
-        message: "This is Sir Bartholomew Oswald van Beethoven the Third!",
-        link: "https://www.ikea.com/us/en/p/blavingad-soft-toy-turtle-green-10532041/"
     },
     {
         name: "mango",
@@ -89,6 +101,15 @@ const interactiveAreas = [
         relHeight: 0.055,
         message: "This is my bird Mango! Click to see more photos!",
         link: "mango-page.html"
+    },
+    {
+        name: "Block_I",
+        relX: 0.7765,
+        relY: 0.4076,
+        relWidth: 0.025,
+        relHeight: 0.063,
+        message: "I attend the University of Illinois at Urbana-Champaign!",
+        link: "https://illinois.edu/"
     }
 ];
 
@@ -134,7 +155,7 @@ const contactLink = "himanipateluiuc@gmail.com"; // You can change this to your 
 
 function checkAllImagesLoaded() {
     imagesLoaded++;
-    if (imagesLoaded === 2) { // Only waiting for 2 images now
+    if (imagesLoaded === 8) { // Now waiting for 8 images
         gameLoop();
     }
 }
@@ -142,6 +163,12 @@ function checkAllImagesLoaded() {
 // Set up onload listeners
 roomImage.onload = checkAllImagesLoaded;
 characterStaticImage.onload = checkAllImagesLoaded;
+turtleHighlightImage.onload = checkAllImagesLoaded;
+bedHighlightImage.onload = checkAllImagesLoaded;
+shelfHighlightImage.onload = checkAllImagesLoaded;
+ipadHighlightImage.onload = checkAllImagesLoaded;
+compHighlightImage.onload = checkAllImagesLoaded;
+blockIHighlightImage.onload = checkAllImagesLoaded;
 
 // Function to update character position
 function updateCharacterPosition(x, y, width, height) {
@@ -194,12 +221,27 @@ function drawScene() {
         }
     }
     // Draw highlight for hovered area
-    else if (hoveredArea && !showNextButton) {
-        ctx.strokeStyle = '#FF9900';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+    if (hoveredArea && !showNextButton) {
+        if (hoveredArea.name === "turtle" && turtleHighlightImage.complete) {
+            ctx.drawImage(turtleHighlightImage, hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        } else if (hoveredArea.name === "bed" && bedHighlightImage.complete) {
+            ctx.drawImage(bedHighlightImage, hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        } else if (hoveredArea.name === "bookshelf" && shelfHighlightImage.complete) {
+            ctx.drawImage(shelfHighlightImage, hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        } else if (hoveredArea.name === "iPad" && ipadHighlightImage.complete) {
+            ctx.drawImage(ipadHighlightImage, hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        } else if (hoveredArea.name === "Macbook" && compHighlightImage.complete) {
+            ctx.drawImage(compHighlightImage, hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        } else if (hoveredArea.name === "Block_I" && blockIHighlightImage.complete) {
+            ctx.drawImage(blockIHighlightImage, hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        } else {
+            ctx.strokeStyle = '#FF9900';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(hoveredArea.x, hoveredArea.y, hoveredArea.width, hoveredArea.height);
+        }
     }
 
+    // 3. Draw animated character (this is your updateCharacterPosition and animatedCharacter.style.display logic)
     // Calculate character dimensions and position (responsive)
     let characterConfig = animationStarted ? UI.characterAnimated : UI.characterStatic;
     const characterWidth = canvas.width * characterConfig.relWidth;
