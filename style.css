@@ -25,3 +25,67 @@ canvas {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }
+
+/* Recruiter / portfolio pop-up windows */
+.portfolio-window {
+    position: absolute;
+    top: 12vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(640px, 80vw);
+    height: min(420px, 65vh);
+    background: #f4f4f4;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 #000;
+    font-family: 'Press Start 2P', monospace;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.portfolio-window-header {
+    background: linear-gradient(90deg, #000080, #3366cc);
+    color: white;
+    padding: 8px 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.portfolio-window-close {
+    background: #c00000;
+    color: white;
+    border: 2px solid #ffffff;
+    font-family: inherit;
+    font-size: 10px;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+.portfolio-window-close:hover {
+    background: #ff0000;
+}
+
+.portfolio-window-body {
+    padding: 12px 14px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #000;
+    overflow-y: auto;
+}
+
+.portfolio-window-body p {
+    margin: 0 0 10px 0;
+}
+
+.portfolio-window-body ul {
+    margin: 0 0 10px 16px;
+    padding-left: 12px;
+}
+
+.portfolio-window-body a {
+    color: #0000ee;
+    text-decoration: underline;
+}

@@ -472,6 +472,12 @@ function handleCanvasClick(event) {
     }
 
     // Check if click is within any interactive area
+    const scaleFactor = 3;
+    const roomWidth = screenImage.width * scaleFactor;
+    const roomHeight = screenImage.height * scaleFactor;
+    const roomX = (canvas.width - roomWidth) / 2;
+    const roomY = (canvas.height - roomHeight) / 2;
+
     for (const area of interactiveAreas) {
         // Convert relative coordinates to absolute canvas coordinates
         const areaX = roomX + (area.relX * roomWidth);
@@ -499,39 +505,43 @@ function handleCanvasClick(event) {
 
 // --- Centered Responsive Icons ---
 function addIcons() {
-  // Remove if already present
-  const old = document.getElementById('icons');
-  if (old) old.remove();
+    // Remove if already present
+    const old = document.getElementById('icons');
+    if (old) old.remove();
 
-  const iconContainer = document.createElement('div');
-  iconContainer.id = 'icons';
-  iconContainer.style.position = 'absolute';
-  iconContainer.style.left = '48%';
-  iconContainer.style.transform = 'translateX(-50%)';
-  iconContainer.style.bottom = '4.4vh'; // Responsive from bottom
-  iconContainer.style.display = 'flex';
-  iconContainer.style.gap = '5px';
-  iconContainer.style.zIndex = 100;
+    const iconContainer = document.createElement('div');
+    iconContainer.id = 'icons';
+    iconContainer.style.position = 'absolute';
+    iconContainer.style.left = '48%';
+    iconContainer.style.transform = 'translateX(-50%)';
+  iconContainer.style.bottom = '8vh'; // Smidge higher
+    iconContainer.style.display = 'flex';
+    iconContainer.style.gap = '5px';
+    iconContainer.style.zIndex = 100;
 
-  // About Me icon
-  const meIcon = document.createElement('img');
-  meIcon.src = 'img/me_icon.png';
-  meIcon.alt = 'About Me';
-  meIcon.style.width = '48px';
-  meIcon.style.height = '48px';
-  meIcon.style.imageRendering = 'pixelated';
-  iconContainer.appendChild(meIcon);
+    // About Me icon
+    const meIcon = document.createElement('img');
+    meIcon.src = 'img/me_icon.png';
+    meIcon.alt = 'About Me';
+    meIcon.style.width = '48px';
+    meIcon.style.height = '48px';
+    meIcon.style.imageRendering = 'pixelated';
+    meIcon.style.cursor = 'pointer';
+    meIcon.addEventListener('click', openAboutWindow);
+    iconContainer.appendChild(meIcon);
 
-  // Stock/Projects icon
-  const stockIcon = document.createElement('img');
-  stockIcon.src = 'img/stock_icon.png';
-  stockIcon.alt = 'Projects';
-  stockIcon.style.width = '48px';
-  stockIcon.style.height = '48px';
-  stockIcon.style.imageRendering = 'pixelated';
-  iconContainer.appendChild(stockIcon);
+    // Stock/Projects icon
+    const stockIcon = document.createElement('img');
+    stockIcon.src = 'img/stock_icon.png';
+    stockIcon.alt = 'Projects';
+    stockIcon.style.width = '48px';
+    stockIcon.style.height = '48px';
+    stockIcon.style.imageRendering = 'pixelated';
+    stockIcon.style.cursor = 'pointer';
+    stockIcon.addEventListener('click', openProjectsWindow);
+    iconContainer.appendChild(stockIcon);
 
-  document.body.appendChild(iconContainer);
+    document.body.appendChild(iconContainer);
 }
 
 // Call on load and on resize
@@ -547,7 +557,7 @@ function addXPClock() {
     clock.id = 'xpClock';
     clock.style.position = 'absolute';
     clock.style.right = '38px'; // adjust as needed
-    clock.style.bottom = '45px'; // adjust as needed
+    clock.style.bottom = '80px'; // moved up
     clock.style.background = 'transparent';
     clock.style.color = 'white';
     clock.style.fontFamily = "'Press Start 2P', monospace";
@@ -579,8 +589,8 @@ function addWindowsText() {
       winText.id = 'windowsText';
       winText.textContent = 'Windows';
       winText.style.position = 'absolute';
-      winText.style.left = '501px'; // adjust as needed
-      winText.style.bottom = '40px'; // adjust as needed
+      winText.style.left = '510px'; // Smidge to the left
+      winText.style.bottom = '75px'; // moved up
       winText.style.background = 'transparent';
       winText.style.color = 'white';
       winText.style.fontFamily = "'Press Start 2P', monospace";
@@ -594,3 +604,93 @@ function addWindowsText() {
   addWindowsText();
   window.addEventListener('resize', addWindowsText);
 // --- End Windows Text ---
+
+// --- Recruiter Pop-up Windows ---
+function createOrShowPortfolioWindow(id, title, bodyHTML) {
+    let win = document.getElementById(id);
+    if (!win) {
+        win = document.createElement('div');
+        win.id = id;
+        win.className = 'portfolio-window';
+
+        const header = document.createElement('div');
+        header.className = 'portfolio-window-header';
+        header.textContent = title;
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'portfolio-window-close';
+        closeBtn.textContent = 'X';
+        closeBtn.addEventListener('click', () => {
+            win.remove();
+        });
+        header.appendChild(closeBtn);
+
+        const body = document.createElement('div');
+        body.className = 'portfolio-window-body';
+        body.innerHTML = bodyHTML;
+
+        win.appendChild(header);
+        win.appendChild(body);
+        document.body.appendChild(win);
+    }
+
+    // Try to place window roughly inside the computer screen area
+    let topPx = window.innerHeight * 0.15;
+    let leftPx = window.innerWidth * 0.5;
+
+    if (screenImage.complete && screenImage.width && screenImage.height) {
+        const scaleFactor = 9.5; // same as drawScene
+        const newWidth = screenImage.width * scaleFactor;
+        const newHeight = screenImage.height * scaleFactor;
+
+        const xOffset = (canvas.width - newWidth) + 2 / 2;
+        const yOffset = (canvas.height - newHeight) / 2;
+
+        // Approximate inner black screen region within the monitor
+        const innerScreenX = xOffset + newWidth * 0.12;
+        const innerScreenY = yOffset + newHeight * 0.16;
+
+        // Drop the window somewhere near the top-left of that inner region
+        leftPx = innerScreenX + newWidth * 0.05;
+        topPx = innerScreenY + newHeight * 0.05;
+    }
+
+    win.style.top = `${topPx}px`;
+    win.style.left = `${leftPx}px`;
+    win.style.transform = 'none';
+
+    // Bring to front
+    win.style.display = 'block';
+    win.style.zIndex = 200;
+}
+
+function openAboutWindow() {
+    const bodyHTML = `
+        <p>Hi! I&apos;m Himani, a CS + creative technologist who loves building playful, interactive experiences like this room and recruiter screen.</p>
+        <p>I enjoy front-end engineering, UI design, and turning ideas into delightful, responsive web experiences.</p>
+        <p><strong>What I&apos;m great at:</strong></p>
+        <ul>
+            <li>JavaScript, HTML5 canvas, and pixel-art inspired interfaces</li>
+            <li>Interactive visualizations and user-focused prototyping</li>
+            <li>Clean, readable code and thoughtful UX details</li>
+        </ul>
+        <p>If you&apos;re a recruiter or hiring manager, I&apos;d love to connect.</p>
+        <p><strong>Contact:</strong> <a href="mailto:${contactLink}">${contactLink}</a></p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/HermioneHacks" target="_blank" rel="noopener noreferrer">HermioneHacks</a></p>
+    `;
+    createOrShowPortfolioWindow('aboutWindow', 'About Me', bodyHTML);
+}
+
+function openProjectsWindow() {
+    const bodyHTML = `
+        <p><strong>Selected Projects</strong></p>
+        <p><strong>Interactive Pixel Room (this page!)</strong><br/>
+        Designed, illustrated, and coded an interactive pixel-art environment with hover targets, animations, and a recruiter-focused flow.</p>
+        <p><strong>Creative Frontend Experiments</strong><br/>
+        A collection of small web toys, UI experiments, and animations exploring game-like interactions for the web.</p>
+        <p>You can explore more of my work on my GitHub:</p>
+        <p><a href="https://github.com/HermioneHacks" target="_blank" rel="noopener noreferrer">github.com/HermioneHacks</a></p>
+    `;
+    createOrShowPortfolioWindow('projectsWindow', 'Projects', bodyHTML);
+}
+// --- End Recruiter Pop-up Windows ---
