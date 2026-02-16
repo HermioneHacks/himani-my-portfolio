@@ -666,30 +666,29 @@ function createOrShowPortfolioWindow(id, title, bodyHTML) {
 
 function openAboutWindow() {
     const bodyHTML = `
-        <p>Hi! I&apos;m Himani, a CS + creative technologist who loves building playful, interactive experiences like this room and recruiter screen.</p>
-        <p>I enjoy front-end engineering, UI design, and turning ideas into delightful, responsive web experiences.</p>
-        <p><strong>What I&apos;m great at:</strong></p>
-        <ul>
-            <li>JavaScript, HTML5 canvas, and pixel-art inspired interfaces</li>
-            <li>Interactive visualizations and user-focused prototyping</li>
-            <li>Clean, readable code and thoughtful UX details</li>
-        </ul>
-        <p>If you&apos;re a recruiter or hiring manager, I&apos;d love to connect.</p>
-        <p><strong>Contact:</strong> <a href="mailto:${contactLink}">${contactLink}</a></p>
+        <p><strong>About this website</strong></p>
+        <p>This portfolio is an interactive pixel-art room I designed, drew, and coded from scratch. You can click around the room to explore, and the &quot;recruiter&quot; flow brings you to this screen.</p>
+        <p><strong>About me</strong></p>
+        <p>Hi, my name is Himani! I am a Junior at the University of Illinois Urbana-Champaign, majoring in Computer Science and Economics with a minor in Statistics. I am a passionate leader and an interactive worker. I aim to learn every day from my experiences, professional or not.</p>
+        <p><strong>Contact:</strong> <a href="mailto:himanipateluiuc@gmail.com">himanipateluiuc@gmail.com</a></p>
         <p><strong>GitHub:</strong> <a href="https://github.com/HermioneHacks" target="_blank" rel="noopener noreferrer">HermioneHacks</a></p>
+        <p><strong>Website:</strong> <a href="https://himani.dev" target="_blank" rel="noopener noreferrer">himani.dev</a></p>
+        <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/h-patel1/" target="_blank" rel="noopener noreferrer">h-patel1</a></p>
     `;
     createOrShowPortfolioWindow('aboutWindow', 'About Me', bodyHTML);
 }
 
 function openProjectsWindow() {
     const bodyHTML = `
-        <p><strong>Selected Projects</strong></p>
-        <p><strong>Interactive Pixel Room (this page!)</strong><br/>
-        Designed, illustrated, and coded an interactive pixel-art environment with hover targets, animations, and a recruiter-focused flow.</p>
-        <p><strong>Creative Frontend Experiments</strong><br/>
-        A collection of small web toys, UI experiments, and animations exploring game-like interactions for the web.</p>
-        <p>You can explore more of my work on my GitHub:</p>
-        <p><a href="https://github.com/HermioneHacks" target="_blank" rel="noopener noreferrer">github.com/HermioneHacks</a></p>
+        <p><strong>Stock-analysis</strong></p>
+        <p>A Python web app that combines financial data with NLP to help analyze market trends. Built with Streamlit — user-friendly and interactive.</p>
+        <p><strong>1. News Summary</strong><br/>
+        Fetches news articles from a search query (e.g. &quot;technology news&quot;) and summarizes them with a pre-trained NLP model. Returns titles, URLs, and summarized content for up to 10 articles.</p>
+        <p><strong>2. Monte Carlo Simulation</strong><br/>
+        Predicts future stock prices using historical data and volatility. You enter a stock symbol, period, number of days to simulate, and number of runs (e.g. AAPL, 2y, 100 days, 500 simulations). Outputs a simulation chart plus stats: expected price and confidence interval.</p>
+        <p><strong>Why I built it:</strong> To create a simple but powerful tool for exploring financial data and news, combining finance with NLP and showing real-world Python data analysis — useful for investors or anyone learning the space.</p>
+        <p><strong>Tech:</strong> Python, NewsAPI, Streamlit.</p>
+        <p><a href="https://github.com/HermioneHacks/Stock-analysis" target="_blank" rel="noopener noreferrer">GitHub: Stock-analysis</a></p>
     `;
     createOrShowPortfolioWindow('projectsWindow', 'Projects', bodyHTML);
 }
